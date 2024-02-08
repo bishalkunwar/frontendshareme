@@ -44,33 +44,33 @@ export default function Home(){
                 <Sidebar user={user && user}/>
             </div>
             
-            <div>
-                <div>
-                    <HiMenu/>
+            <div className="fex md:hidden flex-row">
+                <div className="p-2 w-full flex flex-row justify-between items-center shadow-md">
+                    <HiMenu fontSize={40} className="cursor-pointer" onClick={()=> setToggleSidebar(true)}/>
                     <Link to="/">
-                        <img src={logo} alt="logo"/>
+                        <img src={logo} alt="logo" className="w-28"/>
                     </Link>
-                    <Link to="/">
-                        <img src={user?.image} alt="imageProfile"/>
+                    <Link to={`user-profile/${user?._id}`}>
+                        <img src={user?.image} alt="imageProfile" className="w-9 h-9 rounded-full"/>
                     </Link>
                 </div>
 
                 {toggleSidebar && (
-                    <div>
-                        <div>
-                            <AiFillCloseCircle fontSize={30} onClick={()=> setToggleSidebar(false)}/>
+                    <div className="fixed w-4/5 bg-white h-screen overflow-auto shadow-md z-10 animate-slide-in">
+                        <div className="absolute w-full flex justify-end items-center p-2">
+                            <AiFillCloseCircle fontSize={30} className="cursor-pointer" onClick={()=> setToggleSidebar(false)}/>
                         </div>
                         <Sidebar closeToggle={setToggleSidebar} user={user&&user}/>
                     </div>       
                 )}
-                </div>
+            </div>
+
+                <div className="pb-2 flex-1 h-screen overflow-y-scroll" ref={scrollRef}>
                   <Routes>
                     <Route path="/user-profile/:userId" element={<UserProfile/>}/>
                     <Route path="/*" element={<Pins user={user&&user}/>}/>
-                  </Routes>      
-                <div>
-                    
-            </div>
+                  </Routes>                          
+                </div>
         </div>
     );
 };
