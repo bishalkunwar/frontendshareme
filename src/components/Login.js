@@ -53,11 +53,11 @@ export default function Login(){
                         <GoogleLogin 
                             render={(renderProps)=>(
                                 <button
-                                    type='button' className='bg-mainColor flex justify-center'
+                                    type='button' className='google-button-whole'
                                     onClick={renderProps.onClick}
                                     disabled={renderProps.disabled}
                                 >
-                                    <FcGoogle className="mr-4"/> Sign In with Google
+                                    <FcGoogle className="G-logo"/> Sign In with Google
                                     
                                 </button>
                             )}

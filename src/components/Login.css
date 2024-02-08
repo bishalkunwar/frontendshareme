@@ -36,3 +36,13 @@
 .image-logo{
   padding: 1.25rem;
 }
+
+.google-button-whole{
+  display: flex;
+  justify-content: center;
+  background-color: rgb(0, 0, 0);
+}
+
+.G-logo{
+  margin-right: 1rem;
+}
