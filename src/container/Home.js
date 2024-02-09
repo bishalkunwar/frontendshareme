@@ -1,7 +1,7 @@
+import "./Home.css"
 import { HiMenu } from "react-icons/hi";
 import { AiFillCloseCircle } from "react-icons/ai";
 import {Link, Route, Routes} from 'react-router-dom';
-
 import Sidebar from "../components/Sidebar";
 import UserProfile from "../components/UserProfile";
 import Pins from './Pins';
@@ -47,16 +47,16 @@ export default function Home(){
     }
 
     return(
-        <div className="flex bg-gray-50 md:flex-row flex-col h-screen transition-height duration-85 ease-out">
-            <div className="hidden md:flex h-screen flex-initial">
+        <div className="home-container">
+            <div className="sidebar-comp">
                 <Sidebar user={user && user}/>
             </div>
             
-            <div className="flex md:hidden flex-row">
-                <div className="p-2 w-full flex flex-row justify-between items-center shadow-md">
+            <div className="nav-container">
+                <div className="nav-elements">
                     <HiMenu fontSize={40} className="cursor-pointer" onClick={handleHiMenuClcik}/>
                     <Link to="/">
-                        <img src={logo} alt="logo" className="w-28"/>
+                        <img src={logo} alt="logo" className="w-28"/> 
                     </Link>
                     <Link to={`user-profile/${user?._id}`}>
                         <img src={user?.image} alt="imageProfile" className="w-9 h-9 rounded-full"/>
@@ -64,8 +64,8 @@ export default function Home(){
                 </div>
 
                 {toggleSidebar && (
-                    <div className="fixed w-4/5 bg-white h-screen overflow-y-auto shadow-md z-10 animate-slide-in">
-                        <div className="absolute w-full flex justify-end items-center p-2">
+                    <div className="toggle-container">
+                        <div className="toggle-circle-bounder">
                             <AiFillCloseCircle fontSize={30} className="cursor-pointer" onClick={handleCloseMenu}/>
                         </div>
                         <Sidebar closeToggle={setToggleSidebar} user={user&&user}/>
@@ -73,10 +73,10 @@ export default function Home(){
                 )}
             </div>
 
-            <div className="pb-2 fl ex-1 h-screen overflow-y-scroll" ref={scrollRef}>
+            <div className="side-navs-container" ref={scrollRef}>
                 <Routes>
-                <Route path="/user-profile/:userId" element={<UserProfile/>}/>
-                <Route path="/*" element={<Pins user={user&&user}/>}/>
+                    <Route path="/user-profile/:userId" element={<UserProfile/>}/>
+                    {/* <Route path="/*" element={<Pins user={user&&user}/>}/> */}
                 </Routes>                          
             </div>
         </div>
