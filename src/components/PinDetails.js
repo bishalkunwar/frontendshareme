@@ -7,4 +7,6 @@ const PinDetails = () => {
             pin details.
         </div>
     )
-}
+};
+
+export default PinDetails;

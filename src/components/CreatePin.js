@@ -6,4 +6,6 @@ const CreatePin = () => {
             create pin.
         </div>
     )
-}
+};
+
+export default CreatePin;

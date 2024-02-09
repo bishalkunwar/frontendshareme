@@ -6,4 +6,6 @@ const Search = () => {
             seach comp.
         </div>
     )
-}
+};
+
+export default Search;

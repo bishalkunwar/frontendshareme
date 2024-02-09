@@ -7,4 +7,6 @@ const Feed = () => {
             feed page.
         </div>
     )
-}
+};
+
+export default Feed;
