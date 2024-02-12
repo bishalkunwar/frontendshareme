@@ -66,7 +66,7 @@ export default function Home(){
                 {toggleSidebar && (
                     <div className="toggle-container">
                         <div className="toggle-circle-bounder">
-                            <AiFillCloseCircle fontSize={30} className="cursor-pointer" onClick={handleCloseMenu()}/>
+                            <AiFillCloseCircle fontSize={30} className="cursor-pointer" onClick={handleCloseMenu}/>
                         </div>
                         <Sidebar closeToggle={setToggleSidebar} user={user&&user}/>
                     </div>       
