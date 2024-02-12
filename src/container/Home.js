@@ -76,7 +76,7 @@ export default function Home(){
             <div className="side-navs-container" ref={scrollRef}>
                 <Routes>
                     <Route path="/user-profile/:userId" element={<UserProfile/>}/>
-                    {/* <Route path="/*" element={<Pins user={user&&user}/>}/> */}
+                    <Route path="/*" element={<Pins user={user&&user}/>}/>
                 </Routes>                          
             </div>
         </div>
