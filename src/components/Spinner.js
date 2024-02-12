@@ -1,11 +1,11 @@
 
-import Loader from 'react-loader-spinner';
+import {TailSpin} from 'react-loader-spinner';
 
 export default function Spinner({message}){
 
     return(
         <div className='flex flex-col justify-center items-center w-full h-full'>
-            <Loader
+            <TailSpin
                 type="circles"
                 color="00BFFF"
                 height={50}
