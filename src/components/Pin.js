@@ -9,19 +9,74 @@ import {BsFillArrowUpRightCircleFill} from 'react-icons/bs';
 import {client, urlFor} from '../client';
 
 export const Pin = ({pin}) => {
-
-    const [postHovered, setPostHovered] = useState(false);
+    const[postHovered, setPostHovered] = useState(false);
     const[savingPost, setSavingPost] = useState(false);
     const navigate = useNavigate();
 
-    const {postedBy, image, _id, destination} = pin;
-    const user = localStorage.getItem('user')!=='undefined'?JSON.parse(localStorage('user')):localStorage.clear();
-    
-    let alreadySaved = pin?.save?.filter((item)=>item.postedBy?._id === user?.googleId);
-    
+    const{postedBy, image, _id, destination} = pin;
+
+    const user = localStorage.getItem('user') !== 'undefined' ? JSON.parse(localStorage.getItem('user')):localStorage.clear();
+
+    const deletePin = (id) => {
+        client.delete(id).then(()=>{window.location.reload()});
+    };
+
+    let alreadySaved = pin?.save?.filter((item)=> item?.postedBy?._id === user?.googleId);
+    alreadySaved = alreadySaved?.length>0 ?alreadySaved:[];
+
+    const savePin = (id) => {
+        if(alreadySaved?.length===0){
+            setSavingPost(true);
+
+            client.patch(id).setIfMissing({save:[]}).insert('after', 'save[-1]', [{
+                _key:uuidv4(),
+                userId: user?.googleId,
+                postedBy: {
+                    _type: 'postedBy',
+                    _ref: user?.googleId,
+                },
+            }]).commit().then(()=>{
+                window.location.reload();
+                setSavingPost(false);
+            })
+        }
+    };
+
     return(
-        <div>
-            pin
+        <div className="m-2">
+            <div 
+                onMouseEnter={()=>setPostHovered(true)}
+                onMouseLeave={()=>setPostHovered(false)}
+                onClick={()=>navigate(`pin-detail/${_id}`)}  
+            >
+                {image && (
+                    <img className="rounded-lg w-full" src={(urlFor(image).width(250).url())} alt="user-post"/>
+                )}
+                {postHovered && (
+                    <div className="absolute top-0 w-full h-full flex flex-col justify-between p-1 pr-2 pt-2 pb-2 z-50" style={{height: '100%'}}>
+                        <div className="flex items-center justify-between">
+                            <a href={`${image?.asset?.url}?dl=`} download onClick={(e)=>{e.stopPropagation()}} className="bg-white w-9 h-9 p-2 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none">
+                              <MdDownloadForOffline/>  
+                            </a>
+                        </div>
+                        {alreadySaved?.length !== 0? (
+                            <button type="button" className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 text-base rounded-3xl hover:shadow-md outline-none">
+                                {pin?.save?.length} Saved
+                            </button>
+                        ): (
+                            <button 
+                                onClick={(e)=>{
+                                    e.stopPropagation();
+                                    savePin(_pin);
+                                }}
+                                type="button" className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
+                            >
+                                {pin?.save?.length} {savingPost?'Saving':'Save'}
+                            </button>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     )
 };
