@@ -25,9 +25,17 @@ const CreatePin = ({user}) => {
     const uploadImage = (e) => {
         const selectedFile  = e.target.files[0];
         if(selectedFile.type === 'image/png' || selectedFile.type === "image/svg" || selectedFile.type === "jpef" || selectedFile.type === "gif" || selectedFile.type === "image/tigg"){
-
-        }else{
+            setwrongImageType(false);
             setloading(true);
+            client.assets.upload('image', selectedFile, {contentType: selectedFile.type, filename:selectedFile.name})
+            .then((document)=>{
+                setimageAsset(document); 
+                setloading(false);
+            }).catch((error)=>{
+                    console.log('upload failed', error.message)
+                });
+        }else{
+            setloading(false);
             setwrongImageType(true);
         }
     };
