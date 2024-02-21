@@ -12,31 +12,62 @@ import { useState } from "react";
 const CreatePin = ({user}) => {
 
     const[title, setTitle] = useState('');
-    const [about, setabout] = useState('');
-    const [loading, setloading] = useState(false);
-    const [destination, setdestination] = useState('');
-    const [fields, setfields] = useState('');
-    const [category, setcategory] = useState('');
-    const [imageAsset, setimageAsset] = useState('');
-    const [wrongImageType, setwrongImageType] = useState(false);
+    const [about, setAbout] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [destination, setDestination] = useState();
+    const [fields, setFields] = useState();
+    const [category, setCategory] = useState();
+    const [imageAsset, setImageAsset] = useState();
+    const [wrongImageType, setWrongImageType] = useState(false);
 
     const navigate = useNavigate();
 
     const uploadImage = (e) => {
         const selectedFile  = e.target.files[0];
         if(selectedFile.type === 'image/png' || selectedFile.type === "image/svg" || selectedFile.type === "jpef" || selectedFile.type === "gif" || selectedFile.type === "image/tigg"){
-            setwrongImageType(false);
-            setloading(true);
+            setWrongImageType(false);
+            setLoading(true);
             client.assets.upload('image', selectedFile, {contentType: selectedFile.type, filename:selectedFile.name})
             .then((document)=>{
-                setimageAsset(document); 
-                setloading(false);
+                setImageAsset(document); 
+                setLoading(false);
             }).catch((error)=>{
                     console.log('upload failed', error.message)
                 });
         }else{
-            setloading(false);
-            setwrongImageType(true);
+            setLoading(false);
+            setWrongImageType(true);
+        }
+    };
+
+    const savePin = () => {
+        if(title && about && destination && imageAsset?._id && category) {
+            const doc = {
+                _type: 'pin',
+                title, about, destination, 
+                image:{
+                    _type: 'image',
+                    asset: {
+                        _type: 'reference',
+                        _ref: imageAsset?._id,
+                    },
+                },
+                userId: user?._id,
+                postedBy:{
+                    _type: 'postedBy',
+                    _ref: user?._id,
+                },
+                category,
+            };
+
+            client.create(doc).then(()=>{
+                navigate('/');
+            });
+        }else{
+            setFields(true);
+            setTimeout(()=>{
+                setFields(false);
+            }, 2000);
         }
     };
 
@@ -71,16 +102,45 @@ const CreatePin = ({user}) => {
                                 <input type="file" name="upload-image" onChange={uploadImage} className="w-0 h-0"/>
                             </label>
                         ):(
-                            <div>
-
+                            <div className="relative h-full">
+                                <img src={imageAsset?.url} alt="uploaded-pic" className="h-full w-full" />
+                                <button type="button" className="absolute bottom-3 right-3 p-3 rounded-full bg-white text-xl cursor-pointer outline-none hover:shadow-md transition-all transition-duration-500 ease-in-out" onClick={()=>setimageAsset(null)}>
+                                    <MdDelete/>
+                                </button>
                             </div>
-                        );
-                        
-                        }
+                        )}
                     </div>
                 </div>
+
+                <div className="flex flex-1 flex-col gap-6 lg:pl-5 my-5 w-full">
+                    <input 
+                        type="text"
+                        value={title}
+                        onChange={(e)=>setTitle(e.target.value)}
+                        placeholder="Add Your Title"
+                        className="outline-none text-2xl sm:text-3xl font-bold border-b-2 border-gray-200 p-2"
+                    /> 
+                    {user && (
+                        <div className="flex gap-2 mt-2 mb-2 items-center bg-white rounded-lg">
+                            <img src={user.image} alt="user-profile" className="w-10 h-10 rounded-full"/>
+                            <p className="font-bold">{user.userName}</p>
+                        </div>
+                    )}
+                    <input
+                        type="text"
+                        value={about}
+                        onChange={(e)=>setAbout(e.target.value)}
+                        placeholder="Audience should know, what the pin is about."
+                        className="outline-none text-base sm:text-lg border-b-2 border-gray-200 p-2"
+                    />
+                </div>
+
+                <div className="flex justify-end items-end mt-5">
+                    <button type="button" className="bg-red-500 text-white font-bold p-2 rounded-full w-28 outline-none" onClick={savePin}>
+                        Save Pin
+                    </button>
+                </div>
             </div>
-            
         </div>
     )
 };
