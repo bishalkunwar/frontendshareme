@@ -17,6 +17,10 @@ const PinDetails = ({user}) => {
     const[comment, setComment] = useState('')
     const[addingComment, setAddingComment] = useState(false);
 
+    const addComment = (e) => {
+
+    }
+
     return (
         <div className="flex xl:flex-row flex-col m-auto bg-white" style={{maxWidth: '1500px', borderRadius: '32px'}}>
             <div className="flex justify-center items-center md:items-start flex-initial">
@@ -59,9 +63,20 @@ const PinDetails = ({user}) => {
                         </div>
                     })}
                 </div>
-                
+                <div className="flex flex-wrap mt-6 gap-3">
+                    <Link to={`/user-profile/${user._id}`}>
+                       <img src={user.image} alt="user-profile" className="w-10 h-10 rounded-full cursor-pointer"/> 
+                    </Link>
+                    <input
+                        type="text" placeholder="Add a Comment" value={comment}
+                        onChange={(e)=>setComment(e.target.value)}
+                    />
+                    <button type="button" onClick={addComment} className="br-red-500 text-white rounded-full px-6 py-2 font-semibold text-base outline-none">
+                        {addingComment ? 'Posting...' : 'Done'}
+                    </button>
+                </div>
             </div>
-        </div>
+        </div> 
     );
 };
 
