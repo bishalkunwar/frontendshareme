@@ -21,6 +21,12 @@ const PinDetails = ({user}) => {
 
     }
 
+    if(!pinDetail){
+        return(
+            <Spinner message="Showing Pins, wait!"/>
+        )
+    }
+
     return (
         <>
             {pinDetail&& (
@@ -79,6 +85,15 @@ const PinDetails = ({user}) => {
                     </div>
                 </div>
             </div> )}
+
+            {pins?.length > 0 &&(
+                <h2 className="text-center font-bold text-2xl mt-8 mb-4">
+                    More like this!!!
+                </h2>
+            )}
+
+            {pins ? (<MasonaryLayout pins={pins}/>) : <Spinner message="Loading , more pins!"/>}
+
         </>
 
     );
