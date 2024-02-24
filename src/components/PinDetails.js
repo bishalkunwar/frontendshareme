@@ -1,5 +1,5 @@
 
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import {MdDownloadForOffline} from "react-icons/md";
 import {Link, useParams} from "react-router-dom";
 import {v4 as uuidv4} from "uuid";
@@ -17,26 +17,49 @@ const PinDetails = ({user}) => {
     const[comment, setComment] = useState('')
     const[addingComment, setAddingComment] = useState(false);
 
-    const fetchPinDetails =() => {
+    // const fetchPinDetails =() => {
+    //     const query = pinDetailQuery(pinId);
+
+    //     if(query){
+    //         client.fetch(`${query}`).then((data)=>{
+    //             setPinDetail(data[0]);
+    //             console.log(data);
+    //             if(data[0]){
+    //                 const query1 = pinDetailMorePinQuery(data[0]);
+    //                 client.fetch(query1).then((res)=>{
+    //                     setPins(res);
+    //                 });
+    //             }
+    //         });
+    //     }
+    // };
+
+    // useEffect(()=>{
+    //     fetchPinDetails();
+    // }, [pinId])
+
+
+    const fetchPinDetails = useCallback(() => {
         const query = pinDetailQuery(pinId);
 
-        if(query){
-            client.fetch(`${query}`).then((data)=>{
+        if(query) {
+            client.fetch(`${query}`).then((data) => {
                 setPinDetail(data[0]);
                 console.log(data);
-                if(data[0]){
+                if(data[0]) {
                     const query1 = pinDetailMorePinQuery(data[0]);
-                    client.fetch(query1).then((res)=>{
+                    client.fetch(query1).then((res) => {
                         setPins(res);
                     });
                 }
             });
         }
-    };
+    }, [pinId]);
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchPinDetails();
-    }, [pinId])
+    }, [fetchPinDetails]);
+    
 
     const addComment = () => {
         if(comment){
@@ -90,7 +113,7 @@ const PinDetails = ({user}) => {
                     </Link>
                     <h2 className="mt-5 text-2xl">Comments</h2>
                     <div className="max-h-370 overflow-y-auto">
-                        {pinDetail?.comments.map((cmt)=>{
+                        {pinDetail?.comments.map((cmt)=>(
                             <div className="flex gap-2 mt-5 items-center bg-white rounded-lg" key={cmt.comment}>
                                 <img
                                     src={cmt.postedBy?.image}
@@ -102,7 +125,7 @@ const PinDetails = ({user}) => {
                                     <p>{cmt.comment}</p>
                                 </div>
                             </div>
-                        })}
+                        ))}
                     </div>
                     <div className="flex flex-wrap mt-6 gap-3">
                         <Link to={`/user-profile/${user._id}`}>
