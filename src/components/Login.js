@@ -7,32 +7,59 @@ import logo from "../assets/logowhite.png";
 import './Login.css';
 import { GoogleLogin } from "@react-oauth/google";
 import { client} from '../client';
-
+import {jwtDecode} from "jwt-decode";
 
 export default function Login(){
 
     const navigate = useNavigate();
     const responseGoogle = (response) => {
+    //     try {
+    //         console.log(response);
+    //         localStorage.setItem('user', JSON.stringify(response.profileObj))
+            
+    //         const {name, googleId, imageUrl} = response.profileObj;
+
+    //         const doc = {
+    //             _id: googleId,
+    //             _type: 'user',
+    //             userName: name,
+    //             image: imageUrl
+    //         }
+
+    //         client.createIfNotExists(doc)
+    //             .then(()=>{
+    //                 navigate('/', {replace: true})
+    //             })
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
         console.log(response);
         localStorage.setItem('user', JSON.stringify(response.profileObj))
+        var decodedHeader = jwtDecode(response.credential);
+        console.log(decodedHeader);
         
-        const {name, googleId, imageUrl} = response.profileObj;
+        const { name, imageUrl } = decodedHeader;
+    const googleId = decodedHeader.sub; // Assuming googleId is stored in 'sub' field
 
-        const doc = {
-            _id: googleId,
-            _type: 'user',
-            userName: name,
-            image: imageUrl
-        }
+    const doc = {
+        _id: googleId,
+        _type: 'user',
+        userName: name,
+        image: imageUrl
+    };
 
-        client.createIfNotExist(doc)
-            .then(()=>{
-                navigate('/', {replace: true})
-            })
+    if (!doc._id) {
+        console.error("No ID found in decodedHeader");
+        return;
+    }
+
+    client.createIfNotExists(doc).then(()=>{
+            navigate('/', {replace: true})
+        });
     }
  
     return(  
-        <GoogleOAuthProvider clientId={process.env.SHAREME_GOOGLE_API}>
+        <GoogleOAuthProvider clientId="509761629389-jluav9jorr13v3315lrfahfa78t6p1kp.apps.googleusercontent.com">
             <div className='login-container'>
             <div className='video-container'>
                 <video

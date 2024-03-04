@@ -3,7 +3,7 @@ import ImageUrlBuilder from "@sanity/image-url";
 
 export const client = createClient({
     projectId: `${process.env.SHAREME_SANITY_PROJECT_ID}`,
-    dataset: 'shareme_data',
+    dataset: 'shareme',
     apiVersion: '2023-02-06',
     useCdn: true,
     token: `${process.env.SHAREME_SANITY_PROJECT_TOKEN}`,

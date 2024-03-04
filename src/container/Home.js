@@ -19,7 +19,7 @@ export default function Home(){
 
     useEffect(() => {
         if (userInfo?.googleId) {
-            const query = userQuery(userInfo.googleId);
+            const query = userQuery(userInfo?.googleId);
             client.fetch(query)
                 .then((data) => {
                     setUser(data[0]);
